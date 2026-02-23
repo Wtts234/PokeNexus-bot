@@ -31,7 +31,10 @@ import admin
 # -----------------------------
 # CARREGAR COGS
 # -----------------------------
-bot.add_cog(packs.Packs(bot))
+async def load_cogs():
+    await bot.add_cog(packs.Packs(bot))
+
+bot.loop.create_task(load_cogs())  # Agenda para rodar antes de ficar online
 
 # -----------------------------
 # EVENTO AO LIGAR
