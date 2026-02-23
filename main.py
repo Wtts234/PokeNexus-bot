@@ -2,56 +2,43 @@ import discord
 from discord.ext import commands
 import os
 
+TOKEN = os.getenv("DISCORD_TOKEN")
+
 # -----------------------------
-# CONFIGURAÇÕES DE PERMISSÕES
+# INTENTS
 # -----------------------------
 intents = discord.Intents.default()
-intents.messages = True          # Permite o bot ler mensagens
-intents.message_content = True   # Permite acessar o conteúdo das mensagens
-intents.guilds = True            # Permite interações no servidor
-intents.members = True           # Permite acessar membros (para inventário/decks/etc)
+intents.message_content = True
+intents.messages = True
+intents.guilds = True
+intents.members = True
 
 # -----------------------------
-# INICIALIZAÇÃO DO BOT
+# BOT
 # -----------------------------
-bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
+class PokeNexusBot(commands.Bot):
+    def __init__(self):
+        super().__init__(command_prefix="!", intents=intents, help_command=None)
+
+    async def setup_hook(self):
+        # Carrega todos os cogs automaticamente antes de ligar
+        await self.load_extension("packs")
 
 # -----------------------------
-# IMPORTAÇÃO DOS COGS
+# INICIALIZAÇÃO
 # -----------------------------
-# Supondo que você já criou os arquivos packs.py, inventory.py etc na mesma pasta
-import packs
-import inventory
-import economy
-import decks
-import battle
-import trades
-import admin
+bot = PokeNexusBot()
 
-# -----------------------------
-# CARREGAR COGS
-# -----------------------------
-async def load_cogs():
-    await bot.add_cog(packs.Packs(bot))
-
-bot.loop.create_task(load_cogs())  # Agenda para rodar antes de ficar online
-
-# -----------------------------
-# EVENTO AO LIGAR
-# -----------------------------
 @bot.event
 async def on_ready():
     print(f"🔥 𝐏oké𝐍exus está online como {bot.user}")
 
-# -----------------------------
-# COMANDO DE TESTE
-# -----------------------------
 @bot.command()
 async def ping(ctx):
     await ctx.send("🏓 PokéNexus está ativo!")
 
 # -----------------------------
-# EXECUTAR BOT
+# RODAR BOT
 # -----------------------------
 TOKEN = os.getenv("DISCORD_TOKEN")  # Sempre use variável de ambiente para segurança
 bot.run(TOKEN)
