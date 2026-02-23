@@ -24,11 +24,5 @@ async def on_ready():
 
 # Carregar cogs
 bot.add_cog(packs.Packs(bot))
-bot.add_cog(inventory.Inventory(bot))
-bot.add_cog(economy.Economy(bot))
-bot.add_cog(decks.Decks(bot))
-bot.add_cog(battle.Battle(bot))
-bot.add_cog(trades.Trades(bot))
-bot.add_cog(admin.Admin(bot))
 
 bot.run(TOKEN)
